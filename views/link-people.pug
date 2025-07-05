@@ -1,0 +1,20 @@
+extends layout
+
+block content
+        form(method='POST')
+            h2 Create Relationship for #{person.name}
+
+            div
+                label(for='otherPerson') Select another person:
+                    input(type='text', autocomplete="off", name='otherPerson', id='otherPerson', list='peopleList')
+                    datalist(id='peopleList')
+                        each person in people
+                            option(value=person.pid) #{person.name} - #{person.pid}
+
+            div
+                label(for='relationshipType') Relationship type:
+                input(type='text', autocomplete="off", name='relationshipType', id='relationshipType', placeholder='e.g., friend')
+
+            div
+                button(type='submit') Create Relationship
+

@@ -1,0 +1,12 @@
+extends layout
+
+block content
+        form(method="POST" enctype="multipart/form-data")
+            div
+                label(for="file") Select an image:
+                input(type="file" name="file" accept="image/*" required)
+            div
+                label(for="isProfileImage") Set as Profile Image:
+                input(type="checkbox" name="isProfileImage" value="true")
+            div
+                button(type="submit") Upload Image

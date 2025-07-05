@@ -1,0 +1,80 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    div(style="display: flex; justify-content: space-between; align-items: center;")
+      span
+        h1= title
+      span
+        form(action='/search', method='POST')
+          input(type='text', name='searchTerm', id='searchTerm', autocomplete="off", required=true)
+          button(type='submit') Search
+    p
+      a(href="/person/new") Add new person
+    p
+      a(href="/company/new") Add new company
+    p
+      a(href="/") Return to the homepage
+    hr
+    block content
+
+    script.
+      const sortOrderMap = new Map();
+
+      function sortTableByColumn(tableIdx, column) {
+        const tables = document.querySelectorAll('table.sortablePeople');
+        const table = tables[tableIdx];
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        const isDateColumn = column === 'lastUpdatedAt' || column === 'lastViewedAt';
+
+        const sortKey = `${tableIdx}-${column}`;
+        const currentOrder = sortOrderMap.get(sortKey) || 'asc';
+        const newOrder = currentOrder === 'asc' ? 'desc' : 'asc';
+        sortOrderMap.set(sortKey, newOrder);
+
+        rows.sort((rowA, rowB) => {
+          const cellA = rowA.querySelector(`td:nth-child(${getColumnIndex(table, column)})`);
+          const cellB = rowB.querySelector(`td:nth-child(${getColumnIndex(table, column)})`);
+
+          let valA = cellA.textContent.trim();
+          let valB = cellB.textContent.trim();
+
+          if (isDateColumn) {
+            valA = new Date(valA);
+            valB = new Date(valB);
+          }
+
+          if (valA < valB) return newOrder === 'asc' ? -1 : 1;
+          if (valA > valB) return newOrder === 'asc' ? 1 : -1;
+          return 0;
+        });
+
+        rows.forEach(row => tbody.appendChild(row));
+      }
+
+      function getColumnIndex(table, columnKey) {
+        const headers = table.querySelectorAll('thead th');
+        for (let i = 0; i < headers.length; i++) {
+          if (headers[i].dataset.column === columnKey) {
+            return i + 1;
+          }
+        }
+        return -1;
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.sortablePeople').forEach((table, tableIdx) => {
+          table.querySelectorAll('th').forEach(header => {
+            const columnKey = header.dataset.column;
+            if (!columnKey) return;
+
+            header.addEventListener('click', () => {
+              sortTableByColumn(tableIdx, columnKey);
+            });
+          });
+        });
+      });

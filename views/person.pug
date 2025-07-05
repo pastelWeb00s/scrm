@@ -1,0 +1,225 @@
+extends layout
+
+block content
+        a(href=`/person/${person.pid}/edit`, title="Edit this person's name") 📝
+        |
+        a(href=`/person/${person.pid}/delete`, title="Delete this person", onclick="return confirm('Are you sure you want to delete this person?')") ❌
+        - const lastUpdatedAt = new Date(person.lastUpdatedAt).toLocaleString()
+        - const lastViewedAt = new Date(person.lastViewedAt).toLocaleString()
+        p Last updated at #{lastUpdatedAt}
+        p Last viewed at #{lastViewedAt}
+        if profileImage
+            div
+                a(href=`/${profileImage.publicPath}`)
+                    img(src=`/${profileImage.publicPath}` alt="#{profileImage.name}" style="max-width: 64px; max-height: 64px; width: auto; height: auto;")
+
+        if peopleWithSameName && peopleWithSameName.length > 0
+            h2 Others With This Same Name
+            ul
+                each other in peopleWithSameName
+                    li: a(href=`/person/${other.pid}`)= other.name
+        h2
+            | Images
+            a(href=`/person/${person.pid}/file/new`) ➕
+        if images
+            ul
+                each image in images
+                    div
+                        a(href=`/${image.publicPath}`)
+                            img(src=`/${image.publicPath}` alt="#{image.name}" style="max-width: 64px; max-height: 64px; width: auto; height: auto;")
+                        a(href=`/person/${person.pid}/file/${image.fid}/delete`) ❌
+
+        h2
+            | Tags
+            a(href=`/person/${person.pid}/tags/edit`) 📝
+        if person.tags
+            ul
+                each tag in person.tags
+                    li= tag
+        else
+            p No Tags
+
+
+        h2
+            | Contacts
+            a(href=`/person/${person.pid}/contact/new`) ➕
+        if contacts.length
+            ul
+                each contact in contacts
+                    li
+                        a(href=`/person/${person.pid}/contact/${contact.cid}/delete`) ❌
+                        | #{contact.type}
+                        | :
+                        | #{contact.value}
+        else
+            p No contact found.
+
+        h2
+            | Dates
+            a(href=`/person/${person.pid}/date/new`) ➕
+        ul
+            each date in dates
+                li
+                    span
+                        a(href=`/person/${person.pid}/date/${date.did}/delete`) ❌
+                    - const months = [null, 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                    - let dateStr = '';
+                    if date.year
+                        - dateStr += date.year;
+                    if date.month
+                        - dateStr += ` ${months[date.month]}`;
+                    if date.day
+                        - dateStr += ` ${date.day}`;
+                    if date.hour !== undefined
+                        if dateStr !== ''
+                            - dateStr += ', '
+                        - dateStr += `${String(date.hour).padStart(2, '0')}h`;
+                        if date.minute !== undefined
+                            - dateStr += `${String(date.minute).padStart(2, '0')}min`;
+
+                    | #{dateStr.trim()} —
+                    if dateStr.trim().length
+                        small #{date.howLongAgo}.
+                    |
+                    | #{date.note}
+                    |
+                    if date.remindFrequencyInDays || date.remindFrequencyInMonths
+                        | - Remind every&nbsp;
+                    if date.remindFrequencyInDays
+                        | #{date.remindFrequencyInDays} days
+                    if date.remindFrequencyInMonths
+                        | #{date.remindFrequencyInMonths} months
+                    if date.nextReminderAt
+                        | - Reminder at #{date.nextReminderAt}
+
+        h2
+            | Locations
+            a(href=`/person/${person.pid}/location`) ➕
+        section
+            if locations.length > 0
+                ul
+                    each location in locations
+                        li
+                            strong
+                                a(href=`/person/${person.pid}/location/${location.lid}/delete`) ❌
+                                |
+                                a(href=`/person/${person.pid}/location/${location.lid}/edit`) 📝
+                            if location.street
+                                | #{location.street}
+                            if location.city
+                                if location.street
+                                    | , #{location.city}
+                                else
+                                    | #{location.city}
+                            if location.state
+                                if location.street || location.city
+                                    | , #{location.state}
+                                else
+                                    | #{location.state}
+                            if location.country
+                                if location.street || location.city || location.state
+                                    | , #{location.country}
+                                else
+                                    | #{location.country}
+
+                            if location.postalCode
+                                p Postal Code: #{location.postalCode}
+
+                                    if location.postalCode
+                                    p Postal Code: #{location.postalCode}
+
+                            if location.latitude && location.longitude
+                                p Coordinates:
+                                    | #{location.latitude}, #{location.longitude}
+                            if location.description
+                                p= location.description
+
+            else
+                p No locations found for this person.
+
+        h2
+            | Notes
+            a(href=`/person/${person.pid}/note`) ➕
+        if notes.length > 0
+                each note in notes
+                    - const createdAt = new Date(note.createdAt).toLocaleString()
+                    div(style="margin-left: 5%; margin-right: 5%;")
+                        p(style="white-space: pre-line")= note.content
+                        p
+                            em Created at: #{createdAt}
+                        p
+                            a(href=`/person/${person.pid}/note/${note.nid}/edit`) 📝
+                            | -
+                            a(href=`/person/${person.pid}/note/${note.nid}/delete`) ❌
+                        hr(style="border: 1px solid #ccc; margin: 20px 0;")
+
+        else
+            p No notes available.
+
+
+        h2
+            | Activities
+            a(href=`/person/${person.pid}/activity/new`) ➕
+        if activities.length > 0
+            ul
+                each activity in activities
+                    li
+
+                        a(href=`/person/${person.pid}/activity/${activity.aid}/delete`) ❌
+                        span= activity.name
+                        p= activity.startDate
+                        p= activity.description
+                        p
+                            | <strong>Participants:</strong>
+                            each participant in activity.participants
+                                span= participant
+                                if participant !== activity.participants[activity.participants.length - 1]
+                                    | ,
+        else
+            p No activities available.
+
+
+        h2
+            | Companies
+            a(href=`/person/${person.pid}/company/link`) 🔗
+
+        if companies.length
+            table
+                thead
+                    tr
+                        th Company Name
+                        th Start Date
+                        th End Date
+                tbody
+                    each company in companies
+                        tr
+                            td
+                                a(href=`/person/${person.pid}/company/${company.relationshipId}/delete`) ❌
+                                a(href=`/company/${company.companyId}`)= company.companyName
+                            td= company.startDate
+                            td
+                                if company.endDate
+                                    = company.endDate
+                                else
+                                    | Currently working here
+
+        h2
+            | Relationships
+            a(href=`/person/${person.pid}/relationship/new`) ➕
+        if relationshipsIncoming.length > 0
+                each r in relationshipsIncoming
+                    div
+                        a(href=`/person/${person.pid}/relationship/${r.relationship.rid}/delete`) ❌
+                        | &nbsp;&nbsp;
+                        a(href=`/person/${r.person.pid}`)= r.person.name
+                        | &nbsp;&nbsp; #{r.relationship.type} of &nbsp;
+                        a(href=`/person/${person.pid}`)= person.name
+
+        if relationshipsOutgoing.length > 0
+                each r in relationshipsOutgoing
+                    div
+                        a(href=`/person/${person.pid}/relationship/${r.relationship.rid}/delete`) ❌
+                        | &nbsp;&nbsp;
+                        a(href=`/person/${person.pid}`)= person.name
+                        | &nbsp;&nbsp; #{r.relationship.type} of &nbsp;
+                        a(href=`/person/${r.person.pid}`)= r.person.name

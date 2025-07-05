@@ -1,0 +1,28 @@
+extends layout
+
+block content
+
+        h1 Add Contact to #{person.name}
+        p
+            a(href=`/person/${person.pid}`) Go back to #{person.name}
+
+        form(method="POST")
+
+            div
+                label(for="type") Contact Type:
+                input(type='text', name='type', autocomplete="off", id='type', list='contactOptions')
+                datalist(id="contactOptions")
+                    option(value="email") Email
+                    option(value="phone") Phone
+                    option(value="instagram") Instagram
+                    option(value="telegram") Telegram
+                    option(value="whatsapp") WhatsApp
+                    option(value="website") Website
+                    option(value='other') Other (please specify)
+
+            div
+                label(for="contact") Contact:
+                input(type="text" id="contact" autocomplete="off" name="contact" required)
+
+            div
+                button(type="submit") Add

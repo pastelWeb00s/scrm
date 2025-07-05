@@ -1,0 +1,103 @@
+extends layout
+
+block content
+        if people && people.length
+            h2 People matching "#{searchTerm}"
+            ul
+                each person in people
+                    li
+                        a(href=`/person/${person.pid}`)= person.name
+
+        if peopleWithCompany && peopleWithCompany.length
+            h2 People who work at a company matching "#{searchTerm}"
+            table#peopleWithCompany.sortablePeople
+                thead
+                    tr
+                        th(data-column="company") Company
+                        th(data-column="name") Name
+                        th(data-column="lastUpdatedAt") Last Updated At
+                        th(data-column="lastViewedAt") Last Viewed At
+                tbody
+                    each entry in peopleWithCompany
+                        - const person = entry.person
+                        - const company = entry.company
+                        - const updatedAt = (new Date(person.lastUpdatedAt)).toLocaleString()
+                        - const viewedAt = (new Date(person.lastViewedAt)).toLocaleString()
+                        tr
+                            td: a(href=`/company/${company.cid}`) #{company.name}
+                            td: a(href=`/person/${person.pid}`)= person.name
+                            td= updatedAt
+                            td= viewedAt
+
+        if peopleWithLocation && peopleWithLocation.length
+            h2 People with a location matching "#{searchTerm}"
+            table#peopleWithLocation.sortablePeople
+                thead
+                    tr
+                        th(data-column="location") Location
+                        th(data-column="name") Name
+                        th(data-column="lastUpdatedAt") Last Updated At
+                        th(data-column="lastViewedAt") Last Viewed At
+                tbody
+                    each entry in peopleWithLocation
+                        - const person = entry.person
+                        - const updatedAt = (new Date(person.lastUpdatedAt)).toLocaleString()
+                        - const viewedAt = (new Date(person.lastViewedAt)).toLocaleString()
+                        - const location = entry.location
+                        - const locationArr = []
+                        if location.street
+                            - locationArr.push(location.street)
+                        if location.city
+                            - locationArr.push(location.city)
+                        if location.state
+                            - locationArr.push(location.state)
+                        if location.country
+                            - locationArr.push(location.country)
+                        if location.postalCode
+                            - locationArr.push(location.postalCode)
+                        if location.latitude
+                            - locationArr.push(location.latitude)
+                        if location.longitude
+                            - locationArr.push(location.longitude)
+                        - const locationStr = locationArr.join(", ")
+                            tr
+                                td= locationStr
+                                td: a(href=`/person/${person.pid}`)= person.name
+                                td= updatedAt
+                                td= viewedAt
+
+        if peopleWithNote && peopleWithNote.length
+            h2 People with a note containing "#{searchTerm}"
+            ul
+                each entry in peopleWithNote
+                    li
+                        a(href=`/person/${entry.person.pid}`)= entry.person.name
+                        |  has a note:
+                        p #{entry.note.content}
+
+        if peopleWithContact && peopleWithContact.length
+            h2 People with a contact containing "#{searchTerm}"
+            ul
+                each entry in peopleWithContact
+                    li
+                        a(href=`/person/${entry.person.pid}`)= entry.person.name
+                        |  has a contact:
+                        | #{entry.contact.value}
+
+        if peopleWithActivity && peopleWithActivity.length
+            h2 People with an activity matching "#{searchTerm}"
+            ul
+                each entry in peopleWithActivity
+                    li
+                        a(href=`/person/${entry.person.pid}`)= entry.person.name
+                        |  has an activity:
+                        p #{entry.activity.name}, #{entry.activity.description}
+
+        if peopleWithDate && peopleWithDate.length
+            h2 People with a date matching "#{searchTerm}"
+            ul
+                each entry in peopleWithDate
+                    li
+                        a(href=`/person/${entry.person.pid}`)= entry.person.name
+                        |  has a date:
+                        p #{entry.date.date}

@@ -1,0 +1,11 @@
+extends layout
+
+block content
+
+        form(method="POST")
+            div
+                label(for="name") Company Name:
+                input(type="text" id="name" name="name" autocomplete="off" required)
+
+            div
+                button(type="submit") Add

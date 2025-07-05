@@ -1,0 +1,47 @@
+extends layout
+
+block content
+    - const countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo (Congo-Brazzaville)","Costa Rica","Croatia","Cuba","Cyprus","Czechia (Czech Republic)","Democratic Republic of the Congo","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini (fmr. \"Swaziland\")","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Holy See","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar (formerly Burma)","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Palestine State","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"]
+
+    h1 Location for #{person.name}
+
+    section
+        form(method="POST")
+            p
+            label(for="street") Street:
+            input(type="text", autocomplete="off", id="street", name="street", placeholder="Enter street", value=location.street)
+
+            p
+            label(for="city") City:
+            input(type="text", autocomplete="off", id="city", name="city", placeholder="Enter city", value=location.city)
+
+            p
+            label(for="postalCode") Postal Code:
+            input(type="text", autocomplete="off", id="postalCode", name="postalCode", placeholder="Enter postal code", value=location.postalCode)
+
+            p
+            label(for="state") State:
+            input(type="text", autocomplete="off", id="state", name="state", placeholder="Enter state", value=location.state)
+
+            p
+            label(for="country") Choose a country:
+                input(list="countries", value=location.country, id="country", name="country", placeholder="Start typing a country...")
+                datalist#countries
+                    each country in countries
+                        option(value=country)
+
+            p
+            label(for="latitude") Latitude:
+            input(type="number", autocomplete="off", step="0.0000001", id="latitude", name="latitude", placeholder="Enter latitude", value=location.latitude)
+
+            p
+            label(for="longitude") Longitude:
+            input(type="number", autocomplete="off", step="0.0000001", id="longitude", name="longitude", placeholder="Enter longitude", value=location.longitude)
+
+            p
+            label(for="description") Description:
+            textarea(name="description", id="description", placeholder="Enter additional details about the activity", rows="4", cols="50")
+                | #{location.description}
+
+            p
+            button(type="submit") Submit

@@ -1,0 +1,35 @@
+extends layout
+
+block content
+    h1= company.name
+    a(href=`/company/${company.cid}/delete`, onclick="return confirm('Are you sure you want to delete this company?')") ❌
+    h2 Current Employees
+    if currentEmployees.length > 0
+    ul
+        each link in currentEmployees
+            li
+                strong
+                    a(href=`/person/${link.person.pid}`)= link.person.name
+                if link.relationship.startDate
+                    p Start Date: #{link.relationship.startDate}
+    h2
+        | Images
+        a(href=`/company/${company.cid}/file/new`) ➕
+    if images
+        ul
+            each image in images
+                div
+                    a(href=`/${image.publicPath}`)
+                        img(src=`/${image.publicPath}` alt="#{image.name}" style="max-width: 64px; max-height: 64px; width: auto; height: auto;")
+                    a(href=`/company/${company.cid}/file/${image.fid}/delete`) ❌
+
+    if formerEmployees.length > 0
+    h2 Former Employees
+    ul
+        each link in formerEmployees
+            li
+                strong
+                    a(href=`/person/${link.person.pid}`)= link.person.name
+                if link.relationship.startDate
+                    p Start Date: #{link.relationship.startDate}
+                p End Date: #{link.relationship.endDate}

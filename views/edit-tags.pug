@@ -1,0 +1,37 @@
+extends layout
+
+block content
+        h1 Tags for #{person.name}
+
+        section
+            h2 Current Tags
+            form(method="POST")
+                if person.tags
+                    each tag in person.tags
+                        li
+                            label
+                                input(type="checkbox", name="tagsToRemove", value=tag)
+                                | Remove #{tag}
+                            input(type="hidden", name="tags", value=tag)
+
+                label(for="newTag") Add New Tag:
+                input(type="text", autocomplete="off", id="newTag", name="newTag", placeholder="Enter new tag")
+                p
+                button(type="submit") Submit Changes
+
+                // Displaying a message when the tags are updated
+                if updateMessage
+                    p #{updateMessage}
+
+        script.
+            function removeTag(tag) {
+                // Remove the tag from the list of tags shown on the page
+                const listItem = event.target.closest('li');
+                listItem.remove();
+
+                // Find the hidden input associated with this tag and remove it from the form
+                const hiddenInput = document.querySelector(`input[value='${tag}']`);
+                if (hiddenInput) {
+                    hiddenInput.remove();
+                }
+            }

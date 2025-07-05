@@ -1,0 +1,43 @@
+extends layout
+
+block content
+    h1 Add Date for #{person.name}
+
+    form(method="POST")
+        input(type="hidden", name="pid", value=person.pid)
+
+        .form-group
+            label(for="year") Year
+            input(type="number", autocomplete="off", name="year", id="year", placeholder="e.g. 2025")
+
+        .form-group
+            label(for="month") Month
+            input(type="number", autocomplete="off", name="month", id="month", min="1", max="12", placeholder="1-12")
+
+        .form-group
+            label(for="day") Day
+            input(type="number", autocomplete="off", name="day", id="day", min="1", max="31", placeholder="1-31")
+
+        .form-group
+            label(for="hour") Hour
+            input(type="number", autocomplete="off", name="hour", id="hour", min="0", max="23", placeholder="0-23")
+
+        .form-group
+            label(for="minute") Minute
+            input(type="number", autocomplete="off", name="minute", id="minute", min="0", max="59", placeholder="0-59")
+
+        .form-group
+            label(for="note") Note
+            input(type="text", autocomplete="off", name="note", id="note", placeholder="e.g. Birthday, first contact, etc.")
+
+        .form-group
+            label
+                p Remind me after days:
+                input(type="number", autocomplete="off", name="remindFrequencyInDays", id="remindFrequencyInDays", min="1")
+                p Remind me after months:
+                input(type="number", autocomplete="off", name="remindFrequencyInMonths", id="remindFrequencyInMonths", min="1")
+                p Remind at:
+                input(type="date", name="remindAt", id="remindAt")
+
+
+        button(type="submit") Add Date

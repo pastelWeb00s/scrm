@@ -1,0 +1,78 @@
+extends layout
+
+block content
+  nav
+    h3 Quick Links
+    ul
+      li: a(href="#reminders") Reminders
+      li: a(href="#people") People
+      li: a(href="#companies") Companies
+
+  h2(id="reminders") Reminders Within 3 Months
+  if dates.length
+    ul
+      each d in dates
+        li
+          a(href=`/person/${d.person.pid}`)= d.person.name
+          | :
+          - const months = [null, 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+          - const date = d.date;
+          - const nextReminderAt = new Date(date.nextReminderAt).toLocaleString();
+          - let dateStr = '';
+          if date.year
+            - dateStr += date.year;
+          if date.month
+            - dateStr += ` ${months[date.month]}`;
+          if date.day
+            - dateStr += ` ${date.day}`;
+          if date.hour !== undefined
+            if dateStr !== ''
+              - dateStr += ', '
+            - dateStr += `${String(date.hour).padStart(2, '0')}h`;
+            if date.minute !== undefined
+              - dateStr += `${String(date.minute).padStart(2, '0')}min`;
+
+          | #{dateStr.trim()} —
+          |
+          | #{date.note}.
+          | Reminder at #{nextReminderAt}
+  h2(id="people") People (#{people.length})
+  if people.length
+    table#peopleTable.sortablePeople
+      thead
+        tr
+          th Profile Image
+          th.sortablePeople(data-column="name") Name
+          th.sortablePeople(data-column="lastUpdatedAt") Last Updated At
+          th.sortablePeople(data-column="lastViewedAt") Last Viewed At
+          th.sortablePeople(data-column="tags") Tags
+      tbody
+        each person in people
+          - const updatedAt = (new Date(person.lastUpdatedAt)).toLocaleString()
+          - const viewedAt = (new Date(person.lastViewedAt)).toLocaleString()
+          - const profileImage = profileImages[person.pid];
+          tr
+            td
+              if profileImage
+                span
+                  img(src=`/${profileImage.publicPath}` alt="#{profileImage.name}" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 1px solid gray;")
+            td: a(href=`/person/${person.pid}`)= person.name
+            td= updatedAt
+            td= viewedAt
+            td= person.tags
+
+  h2(id="tagged-people") Tagged People
+  div#grouped-tables
+
+  h2(id="companies") Companies (#{companies.length})
+  if companies.length
+    ul
+      each c in companies
+        li(style="display: flex; align-items: center;")
+          - const profileImage = profileImages[c.cid];
+          if profileImage
+            span
+              img(src=`/${profileImage.publicPath}` alt="#{profileImage.name}" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 1px solid gray;")
+          a(href=`/company/${c.cid}`)= c.name
+  else
+    p No companies found.

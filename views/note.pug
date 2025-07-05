@@ -1,0 +1,12 @@
+extends layout
+
+block content
+        a(href=`/person/${person.pid}`) Back to #{person.name}
+        form(method="POST")
+
+            label(for="note") Note Content:
+            p
+            textarea(name="note", autocomplete="off", rows="5", cols="50", placeholder="Write your note here...")= note ? note.content : ''
+
+            br
+            button(type="submit") Save Note

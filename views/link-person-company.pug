@@ -1,0 +1,27 @@
+extends layout
+
+block content
+    h1 Add relationship between #{person.name} and a company
+
+    form(method="POST")
+        div
+            label(for="company") Select Company:
+                input(type='text', autocomplete="off", name='company', id='company', list='companyList')
+                datalist(id='companyList')
+                    each company in companies
+                        option(value=company.cid) #{company.name} - #{company.cid}
+
+        div
+            label(for="startDate") Start Date:
+            input(type="date", name="startDate", id="startDate")
+
+        div
+            label(for="endDate") End Date:
+            input(type="date", name="endDate", id="endDate")
+
+        div
+            label(for="title") Title:
+            input(type="text", autocomplete="off", name="title", id="title", required)
+
+        div
+            button(type="submit") Add Relationship

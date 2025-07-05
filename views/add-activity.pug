@@ -1,0 +1,38 @@
+extends layout
+
+block content
+
+        form(method="POST")
+            label(for="name") Activity Name:
+            input(type="text", name="name", id="name", autocomplete="off", placeholder="Enter the activity name", required)
+
+            br
+
+            label(for="startDate") Start Date:
+            input(type="datetime-local", name="startDate", id="startDate")
+
+            br
+
+            label(for="endDate") End Date:
+            input(type="datetime-local", name="endDate", id="endDate")
+
+            br
+
+            label(for="location") Location:
+            input(type="text", autocomplete="off", name="location", id="location", placeholder="Enter the activity location")
+
+            br
+
+            label(for="description") Description:
+            textarea(name="description", id="description", placeholder="Enter additional details about the activity", rows="4", cols="50")
+
+            br
+
+            label(for="participants") Select Participants:
+            select(name="participants" id="participants" multiple size="5")
+                each person in people
+                    option(value=person.pid)= person.name
+
+            br
+
+            button(type="submit") Create Activity
